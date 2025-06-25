@@ -1,0 +1,28 @@
+@page "/events"
+@using EventEase.Services;
+@inject EventRegisterService EventRegisterService
+
+<h2>All Events</h2>
+
+<table class="table">
+
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Location</th>
+    </tr>
+    </thead>
+     <tbody>
+        @foreach (var evt in EventRegisterService.GetEvents())
+        {
+            <tr>
+                <td><NavLink href="@($"/event-details/{evt.Name}")" Match="NavLinkMatch.Prefix">@evt.Name</NavLink></td>
+                @* <td>@evt.Name</td> *@
+                <td>@evt.Date</td>
+                <td>@evt.Location</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

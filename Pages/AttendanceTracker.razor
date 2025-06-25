@@ -1,0 +1,48 @@
+@page "/attendance-tracker"
+@using EventEase.Services
+@inject UserSessionTracker SessionTracker
+
+<h2>Attendance Tracker</h2>
+
+@if (SessionTracker.AllRegistrations.Count == 0)
+{
+    <p>No registrations yet.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Event</th>
+                <th>Email</th>
+                <th>Attended</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var reg in SessionTracker.AllRegistrations)
+            {
+                <tr>
+                    <td>@reg.FullName</td>
+                    <td>@reg.EventName</td>
+                    <td>@reg.Email</td>
+                    <td>@reg.Attended</td>
+                    <td>
+                        @if (!reg.Attended)
+                        {
+                            <button @onclick="() => MarkAsAttended(reg.Email, reg.EventName)">Mark as Attended</button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private void MarkAsAttended(string email, string eventName)
+    {
+        SessionTracker.MarkAttendance(email, eventName);
+    }
+}

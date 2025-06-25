@@ -1,0 +1,18 @@
+@page "/thank-you"
+@using EventEase.Services
+@inject UserSessionTracker SessionTracker
+
+<h2>Thank You for Registering!</h2>
+
+@if (SessionTracker.AllRegistrations.Any())
+{
+    var recent = SessionTracker.AllRegistrations.Last();
+
+    <p><strong>Name:</strong> @recent.FullName</p>
+    <p><strong>Email:</strong> @recent.Email</p>
+    <p><strong>Event:</strong> @recent.EventName</p>
+}
+else
+{
+    <p>No registration data found.</p>
+}

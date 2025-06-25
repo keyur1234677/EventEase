@@ -1,0 +1,35 @@
+@page "/event-details/{name}"
+@using EventEase.Models
+@using EventEase.Services
+@inject EventRegisterService EventRegisterService
+
+<h2>Event Details</h2>
+
+@if (eventDetails is not null)
+{
+    <p>
+        <strong>Event Name:</strong> @eventDetails.Name<br />
+        <strong>Event Date:</strong> @eventDetails.Date.ToShortDateString()<br />
+        <strong>Event Location:</strong> @eventDetails.Location
+    </p>
+    <a href="/register/@Uri.EscapeDataString(eventDetails.Name)">Register</a>
+}
+else
+{
+    <p>No event found with that name.</p>
+}
+
+@code {
+    [Parameter] public string? name { get; set; }
+    private Event? eventDetails;
+
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrWhiteSpace(name))
+        {
+            eventDetails = EventRegisterService
+                .GetEvents()
+                .FirstOrDefault(evt => evt.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+        }
+    }
+}

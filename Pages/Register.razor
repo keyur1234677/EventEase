@@ -1,0 +1,40 @@
+@page "/register/{name}"
+@using EventEase.Models
+@using EventEase.Services
+@inject UserSessionTracker SessionTracker
+@inject NavigationManager Nav
+@code {
+    [Parameter] public string name { get; set; }
+    private EventRegistration registration = new();
+
+    private void HandleValidSubmit()
+    {
+        //SessionTracker.CurrentRegistration = registration;
+        SessionTracker.AddRegistration(registration);
+        Console.WriteLine("User registered!");
+        // Redirect or show confirmation
+        Nav.NavigateTo("/thank-you");
+    }
+
+    protected override void OnInitialized()
+    {
+        registration.EventName = name;
+    }
+}
+
+<EditForm Model="@registration" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <label>Name:</label>
+    <InputText @bind-Value="registration.FullName" />
+    <ValidationMessage For="@(() => registration.FullName)" />
+
+    <label>Email:</label>
+    <InputText @bind-Value="registration.Email" />
+    <ValidationMessage For="@(() => registration.Email)" />
+
+    <p><strong>Registering for:</strong> @registration.EventName</p>
+
+    <button type="submit">Submit Registration</button>
+</EditForm>
